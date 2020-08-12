@@ -50,76 +50,23 @@ public class ProductsHandler {
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		Map<String, Object> returnObject = new HashMap<String, Object>();
-		MultivaluedMap<String, String> queryParameters = uriInfo.getQueryParameters();
-		//List<Products> list = null;
-		Integer firstRecord = 0;
-		Integer maxResults = 50;
-		boolean paginationInfo = false;
-		StringBuilder whereSb = null;
-		Long count = 0l;
-		Map<String, Object> jqlParameters = new HashMap<String, Object>();
 		EntityManager em = genaricCrudDAO.getEntityManager();
 		
 		try {
-//			whereSb = new StringBuilder("where 1=1 ");
-//			if (queryParameters.containsKey("first")) {
-//				firstRecord = Integer.parseInt(queryParameters.getFirst("first")) - 1;
-//			}
-//			if (queryParameters.containsKey("maxResults")) {
-//				maxResults = Integer.parseInt(queryParameters.getFirst("maxResults"));
-//			}
-//			if (queryParameters.containsKey("first_name")) {
-//				whereSb.append("and e.first_name like '%" + queryParameters.getFirst("first_name") + "%' ");
-//			}
-//			if (queryParameters.containsKey("last_name")) {
-//				whereSb.append("and e.last_name like '%" + queryParameters.getFirst("last_name") + "%' ");
-//			}
-//			if (queryParameters.containsKey("district")) {
-//				whereSb.append("and e.district like '%" + queryParameters.getFirst("district") + "%' ");
-//			}
-//			if (queryParameters.containsKey("gender")) {
-//				whereSb.append("and e.gender like '%" + queryParameters.getFirst("gender") + "%' ");
-//			}
-//			if (queryParameters.containsKey("date_to")) {
-//				whereSb.append("and e.date_to like '%" + queryParameters.getFirst("date_to") + "%' ");
-//			}
-//			if (queryParameters.containsKey("date_from")) {
-//				whereSb.append("and e.date_from like '%" + queryParameters.getFirst("date_from") + "%' ");
-//			}
-//			if (queryParameters.containsKey("paginationInfo")) {
-//				paginationInfo = Boolean.parseBoolean(queryParameters.getFirst("paginationInfo"));
-//			}
-			StoredProcedureQuery procedureQuery = em.createNamedStoredProcedureQuery("Products.GetProducts");
-			procedureQuery.execute();	
-			@SuppressWarnings("unchecked")
-			List<ProductsHandler> resultList = procedureQuery.getResultList();
-			//list = genaricCrudDAO.createQuery("SELECT e FROM Employee e " + whereSb.toString() + " order by e.first_name ASC", jqlParameters,firstRecord, maxResults);
-			returnObject.put("products", resultList);
-		
-//			if (firstRecord == 0 || paginationInfo) {
-//
-//				StringBuffer jpqlCountSb = new StringBuffer();
-//				jpqlCountSb.append("Select count(distinct e.id) from Product e ");
-//				jpqlCountSb.append(whereSb);
-//				count = (Long) genaricCrudDAO.createSingleResultQuery(jpqlCountSb.toString(), jqlParameters,0, maxResults);
-//				returnObject.put("noOfRecords", count);
-//			}
+				StoredProcedureQuery procedureQuery = em.createNamedStoredProcedureQuery("Products.GetProducts");
+				procedureQuery.execute();	
+				@SuppressWarnings("unchecked")
+				List<Products> resultList = procedureQuery.getResultList();
+				returnObject.put("products", resultList);
 				updateSerializationMixIns(objectMapper, true);
 				System.out.println("Taking Product details from the database :)");
 				return Response.status(Response.Status.OK).entity(objectMapper.writeValueAsString(returnObject)).build();
-
 			} catch (Exception e) {
 				System.out.println(e);
 			}finally {
-				objectMapper = null;
-				returnObject = null;
-				//list = null;
-				queryParameters = null;
-				jqlParameters = null;
-				whereSb = null;
 				System.out.println("API has been callled :)");
 			}
-				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Connection or database configurations failed").build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Connection or database configurations failed").build();
 	}
 	
 	@POST
@@ -132,7 +79,6 @@ public class ProductsHandler {
 			ObjectMapper objectMapper = new ObjectMapper();
 			Map<String, Object> returnObject = new HashMap<String, Object>();
 			EntityManager em = genaricCrudDAO.getEntityManager();
-			//MultivaluedMap<String, String> queryParameters = uriInfo.getQueryParameters();
 			StoredProcedureQuery procedureQuery = em.createNamedStoredProcedureQuery("Products.insertProducts");
 			procedureQuery.setParameter("productId",products.getProductId() );
 			procedureQuery.setParameter("productName", products.getProductName());
@@ -140,10 +86,7 @@ public class ProductsHandler {
 			procedureQuery.setParameter("productPriceRetail", products.getProductPriceRetail());
 			procedureQuery.setParameter("stock", products.getStock());
 			procedureQuery.execute();
-			@SuppressWarnings("unchecked")
-			List<Products> resultList = procedureQuery.getResultList();
-			genaricCrudDAO.update(procedureQuery);
-			returnObject.put("status",resultList);
+			returnObject.put("product","Product details entered into database");
 			return Response.status(Response.Status.OK).entity(objectMapper.writeValueAsString(returnObject)).build();
 		} catch (Exception e) {
 			System.out.println(e);
@@ -199,10 +142,7 @@ public class ProductsHandler {
 			StoredProcedureQuery procedureQuery = sale.createNamedStoredProcedureQuery("Products.deletebyId");
     		procedureQuery.setParameter("id",id);
 			procedureQuery.execute();	
-			@SuppressWarnings("unchecked")
-			List<Sales> resultList = procedureQuery.getResultList();
-			resultList = null;
-			returnObject.put("status", "Success");
+			returnObject.put("status", "Product item deleted Successfully");
 			return Response.status(Response.Status.OK).entity(objectMapper.writeValueAsString(returnObject)).build();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -229,10 +169,8 @@ public class ProductsHandler {
 			procedureQuery.setParameter("productPriceRetail", products.getProductPriceRetail());
 			procedureQuery.setParameter("stock", products.getStock());
 			procedureQuery.execute();
-			@SuppressWarnings("unchecked")
-			List<Employee> resultList = procedureQuery.getResultList();
 			genaricCrudDAO.update(procedureQuery);
-			returnObject.put("status",resultList);
+			returnObject.put("status","Prodcuts details have been updated");
 			return Response.status(Response.Status.OK).entity(objectMapper.writeValueAsString(returnObject)).build();
 		} catch (Exception e) {
 			System.out.println(e);

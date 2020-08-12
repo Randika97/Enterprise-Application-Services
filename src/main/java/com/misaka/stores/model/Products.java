@@ -13,7 +13,7 @@ import javax.persistence.ParameterMode;
 import javax.persistence.StoredProcedureParameter;
 import javax.persistence.Table;
 
-@Entity
+
 @NamedStoredProcedureQueries({
 	  @NamedStoredProcedureQuery(
 	    name="Products.insertProducts",
@@ -45,7 +45,7 @@ import javax.persistence.Table;
 			    resultClasses = { Products.class },
 			    procedureName="deleteProductbyId",
 			    parameters={
-			    @StoredProcedureParameter(mode = ParameterMode.IN, name = "id",type = String.class)
+			    @StoredProcedureParameter(mode = ParameterMode.IN, name = "id",type = Integer.class)
 			      }
 			    ),
 	  @NamedStoredProcedureQuery(
@@ -53,7 +53,7 @@ import javax.persistence.Table;
 			    resultClasses = { Products.class },
 			    procedureName="getProductbyId",
 			    parameters={
-			    @StoredProcedureParameter(mode = ParameterMode.IN, name = "id",type = String.class)
+			    @StoredProcedureParameter(mode = ParameterMode.IN, name = "id",type = Integer.class)
 			      }
 			    ),
 	    @NamedStoredProcedureQuery(
@@ -61,6 +61,7 @@ import javax.persistence.Table;
 	    		procedureName="GetProducts",
 	    		resultClasses = { Products.class })
 	})
+@Entity
 @Table(name="products",schema="keells")
 public class Products implements Serializable{
 

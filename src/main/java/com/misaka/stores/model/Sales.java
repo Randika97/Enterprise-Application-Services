@@ -57,7 +57,6 @@ private static final long serialVersionUID = 1L;
 	private int total;
 	private String stat;
 	
-
 	public Sales(int transactionId, String transactionDateTime, int total, String stat) {
 		super();
 		this.transactionId = transactionId;
@@ -90,7 +89,7 @@ private static final long serialVersionUID = 1L;
 	public void setTotal(int total) {
 		this.total = total;
 	}
-	@Column(name="status")
+	@Column(name="stat")
 	public String getStat() {
 		return stat;
 	}

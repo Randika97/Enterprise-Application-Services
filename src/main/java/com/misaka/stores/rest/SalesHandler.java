@@ -135,7 +135,7 @@ public class SalesHandler {
 	@Path("/updateSales")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response saveUser(Sales sales, @Context SecurityContext sc, @Context UriInfo uriInfo)
+	public Response updateSales(Sales sales, @Context SecurityContext sc, @Context UriInfo uriInfo)
 			throws JsonProcessingException {
 		try {
 			ObjectMapper objectMapper = new ObjectMapper();
@@ -147,10 +147,8 @@ public class SalesHandler {
 			procedureQuery.setParameter("total", sales.getTotal());
 			procedureQuery.setParameter("stat", sales.getStat());
 			procedureQuery.execute();
-			@SuppressWarnings("unchecked")
-			List<Employee> resultList = procedureQuery.getResultList();
 			genaricCrudDAO.update(procedureQuery);
-			returnObject.put("status",resultList);
+			returnObject.put("status","sales details update.");
 			return Response.status(Response.Status.OK).entity(objectMapper.writeValueAsString(returnObject)).build();
 		} catch (Exception e) {
 			System.out.println(e);
