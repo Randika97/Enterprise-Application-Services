@@ -17,15 +17,45 @@ import javax.persistence.Table;
 @NamedStoredProcedureQueries({
 	  @NamedStoredProcedureQuery(
 	    name="Products.insertProducts",
-	    resultClasses = { Employee.class },
+	    resultClasses = { Products.class },
 	    procedureName="insertProducts",
 	    parameters={
-	      @StoredProcedureParameter(mode = ParameterMode.IN, name = "productId",type = String.class),
+	      @StoredProcedureParameter(mode = ParameterMode.IN, name="productId",type = String.class),
 	      @StoredProcedureParameter(mode = ParameterMode.IN, name="productName", type=String.class),
 	      @StoredProcedureParameter(mode = ParameterMode.IN, name="catergory",type=String.class),
-	      @StoredProcedureParameter(mode = ParameterMode.IN, name="productPriceRetail",type=String.class)
+	      @StoredProcedureParameter(mode = ParameterMode.IN, name="productPriceRetail",type=String.class),
+	      @StoredProcedureParameter(mode = ParameterMode.IN, name="stock",type=Integer.class)
 	      }
 	    ),
+	  @NamedStoredProcedureQuery(
+			    name="Products.updateProducts",
+			    resultClasses = { Products.class },
+			    procedureName="updateProductbyId",
+			    parameters={
+			      @StoredProcedureParameter(mode = ParameterMode.IN, name="id",type = Integer.class),
+			      @StoredProcedureParameter(mode = ParameterMode.IN, name="productId",type = String.class),
+			      @StoredProcedureParameter(mode = ParameterMode.IN, name="productName", type=String.class),
+			      @StoredProcedureParameter(mode = ParameterMode.IN, name="catergory",type=String.class),
+			      @StoredProcedureParameter(mode = ParameterMode.IN, name="productPriceRetail",type=String.class),
+			      @StoredProcedureParameter(mode = ParameterMode.IN, name="stock",type=Integer.class)
+			      }
+			    ),
+	  @NamedStoredProcedureQuery(
+			    name="Products.deletebyId",
+			    resultClasses = { Products.class },
+			    procedureName="deleteProductbyId",
+			    parameters={
+			    @StoredProcedureParameter(mode = ParameterMode.IN, name = "id",type = String.class)
+			      }
+			    ),
+	  @NamedStoredProcedureQuery(
+			    name="Products.getproductsbyid",
+			    resultClasses = { Products.class },
+			    procedureName="getProductbyId",
+			    parameters={
+			    @StoredProcedureParameter(mode = ParameterMode.IN, name = "id",type = String.class)
+			      }
+			    ),
 	    @NamedStoredProcedureQuery(
 	    		name="Products.GetProducts",
 	    		procedureName="GetProducts",
@@ -36,8 +66,6 @@ public class Products implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	
-	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
@@ -45,14 +73,18 @@ public class Products implements Serializable{
 	private String productName;
 	private String catergory;
 	private String productPriceRetail;
-	
-	public Products(int id, String productId, String productName, String catergory, String productPriceRetail) {
+	private int stock;
+
+
+	public Products(int id, String productId, String productName, String catergory, String productPriceRetail,
+			int stock) {
 		super();
 		this.id = id;
 		this.productId = productId;
 		this.productName = productName;
 		this.catergory = catergory;
 		this.productPriceRetail = productPriceRetail;
+		this.stock = stock;
 	}
 
 	public Products() {
@@ -93,6 +125,15 @@ public class Products implements Serializable{
 	}
 	public void setProductPriceRetail(String productPriceRetail) {
 		this.productPriceRetail = productPriceRetail;
+	}
+
+	@Column(name="stock")
+	public int getStock() {
+		return stock;
+	}
+
+	public void setStock(int stock) {
+		this.stock = stock;
 	}
 
 

@@ -7,45 +7,75 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedStoredProcedureQueries;
+import javax.persistence.NamedStoredProcedureQuery;
+import javax.persistence.ParameterMode;
+import javax.persistence.StoredProcedureParameter;
 import javax.persistence.Table;
 @Entity
+@NamedStoredProcedureQueries({
+	@NamedStoredProcedureQuery(
+		    name="Sales.deletebyid",
+		    resultClasses = { Sales.class },
+		    procedureName="salesDeleteById",
+		    parameters={
+		      @StoredProcedureParameter(mode = ParameterMode.IN, name = "transactionId",type = Integer.class),
+		      }
+		),
+	@NamedStoredProcedureQuery(
+		    name="Sales.updateSales",
+		    resultClasses = { Sales.class },
+		    procedureName="salesUpdate",
+		    parameters={
+		      @StoredProcedureParameter(mode = ParameterMode.IN, name = "transactionId",type = Integer.class),
+		      @StoredProcedureParameter(mode = ParameterMode.IN, name = "transactionDateTime",type = String.class),
+		      @StoredProcedureParameter(mode = ParameterMode.IN, name = "total",type = Integer.class),
+		      @StoredProcedureParameter(mode = ParameterMode.IN, name = "stat",type = String.class),
+		      }
+		),
+	@NamedStoredProcedureQuery(
+		    name="Sales.getsalesbyid",
+		    resultClasses = { Sales.class },
+		    procedureName="getsalesbyid",
+		    parameters={
+		      @StoredProcedureParameter(mode = ParameterMode.IN, name = "transactionId",type = Integer.class),
+		      }
+		),
+	@NamedStoredProcedureQuery(
+			name="Sales.GetSales",
+	    	procedureName="GetSales",
+	    	resultClasses = { Sales.class })
+	})
 @Table(name="sales",schema="keells")
 public class Sales implements Serializable{
 private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int id;
-	private String transactionId;
+	private int transactionId;
 	private String transactionDateTime;
-	private String total;
-	private String status;
+	private int total;
+	private String stat;
 	
-	public Sales() {
-	
-	}
-	public Sales(int id, String transactionId, String transactionDateTime, String total, String status) {
+
+	public Sales(int transactionId, String transactionDateTime, int total, String stat) {
 		super();
-		this.id = id;
 		this.transactionId = transactionId;
 		this.transactionDateTime = transactionDateTime;
 		this.total = total;
-		this.status = status;
+		this.stat = stat;
 	}
-	@Column(name="id")
-	public int getId() {
-		return id;
+	public Sales() {
 	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	@Column(name="id")
-	public String getTransactionId() {
+
+	@Column(name="transactionId")
+	public int getTransactionId() {
 		return transactionId;
 	}
-	public void setTransactionId(String transactionId) {
+	public void setTransactionId(int transactionId) {
 		this.transactionId = transactionId;
 	}
+
 	@Column(name="transactionDateTime")
 	public String getTransactionDateTime() {
 		return transactionDateTime;
@@ -54,18 +84,19 @@ private static final long serialVersionUID = 1L;
 		this.transactionDateTime = transactionDateTime;
 	}
 	@Column(name="total")
-	public String getTotal() {
+	public int getTotal() {
 		return total;
 	}
-	public void setTotal(String total) {
+	public void setTotal(int total) {
 		this.total = total;
 	}
 	@Column(name="status")
-	public String getStatus() {
-		return status;
+	public String getStat() {
+		return stat;
 	}
-	public void setStatus(String status) {
-		this.status = status;
+	public void setStat(String stat) {
+		this.stat = stat;
 	}
+
 
 }
