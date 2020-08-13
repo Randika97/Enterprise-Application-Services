@@ -16,9 +16,9 @@ import javax.persistence.Table;
 
 @NamedStoredProcedureQueries({
 	  @NamedStoredProcedureQuery(
-	    name="Temp.insertProducts",
+	    name="Temp.temp_trans",
 	    resultClasses = { Temp.class },
-	    procedureName="insertProducts",
+	    procedureName="temp_trans",
 	    parameters={
 	      @StoredProcedureParameter(mode = ParameterMode.IN, name="productId",type = Integer.class),
 	      @StoredProcedureParameter(mode = ParameterMode.IN, name="qty", type=Integer.class),
@@ -30,6 +30,14 @@ import javax.persistence.Table;
 			    procedureName="deleteProductbyId",
 			    parameters={
 			    @StoredProcedureParameter(mode = ParameterMode.IN, name = "id",type = String.class)
+			      }
+			    ),
+	  @NamedStoredProcedureQuery(
+			    name="Temp.transaction_stat",
+			    resultClasses = { Sales.class },
+			    procedureName="transaction_stat",
+			    parameters={
+			    @StoredProcedureParameter(mode = ParameterMode.IN, name = "stat",type = String.class)
 			      }
 			    ),
 	    @NamedStoredProcedureQuery(
@@ -102,7 +110,4 @@ private static final long serialVersionUID = 1L;
 		this.total = total;
 	}
 	
-	
-
-
 }

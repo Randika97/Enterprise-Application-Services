@@ -9,7 +9,9 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.StoredProcedureQuery;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -23,10 +25,13 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.misaka.stores.common.GenericCrudDAOIF;
 import com.misaka.stores.model.Employee;
+import com.misaka.stores.model.Products;
+import com.misaka.stores.model.Sales;
 import com.misaka.stores.model.Temp;
 
 @Stateless
@@ -62,6 +67,55 @@ public class Tempory {
 		}
 		return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Connection or database configurations failed").build();
 	}
+	
+	@POST
+	@Path("/enterProductTemp")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response saveProducts(Temp temp, @Context SecurityContext sc, @Context UriInfo uriInfo)
+			throws JsonProcessingException {
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			Map<String, Object> returnObject = new HashMap<String, Object>();
+			EntityManager em = genaricCrudDAO.getEntityManager();
+			StoredProcedureQuery procedureQuery = em.createNamedStoredProcedureQuery("Temp.temp_trans");
+			procedureQuery.setParameter("productId",temp.getProductId() );
+			procedureQuery.setParameter("qty", temp.getQty());
+			procedureQuery.execute();
+			returnObject.put("product","Product details entered into temp table");
+			return Response.status(Response.Status.OK).entity(objectMapper.writeValueAsString(returnObject)).build();
+		} catch (Exception e) {
+			System.out.println(e);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Connection or database configurations failed")
+					.build();
+		}
+	}
+	
+	@POST
+	@Path("/Checkout")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response checkout(Sales sale, @Context SecurityContext sc, @Context UriInfo uriInfo)
+			throws JsonProcessingException {
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			Map<String, Object> returnObject = new HashMap<String, Object>();
+			EntityManager em = genaricCrudDAO.getEntityManager();
+			StoredProcedureQuery procedureQuery = em.createNamedStoredProcedureQuery("Temp.temp_trans");
+			procedureQuery.setParameter("stat",sale.getStat() );
+			procedureQuery.execute();
+			returnObject.put("product","Transaction completed");
+			return Response.status(Response.Status.OK).entity(objectMapper.writeValueAsString(returnObject)).build();
+		} catch (Exception e) {
+			System.out.println(e);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Connection or database configurations failed")
+					.build();
+		}
+	}
+	
+	
+	
+	
 	private void updateSerializationMixIns(ObjectMapper objectMapper, boolean isQuestionTemplateList) {
 		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 		objectMapper.addMixIn(Object.class, IgnoreHibernatePropertiesInJackson.class);
